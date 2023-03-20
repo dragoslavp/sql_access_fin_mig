@@ -13,7 +13,7 @@ SET @CompanyID = (SELECT CompanyId from grg.Company where Code=@CompanyCode);
 set @Year = 2022;
 set @LedgerDocumentCategoryTypeId = (SELECT LedgerDocumentCategoryTypeId FROM CRG.LedgerDocumentCategoryType WHERE CompanyId=@CompanyID AND NAME='Redovno knjiženje');
 SET @JournalID = (SELECT JournalId FROM crg.Journal where CompanyId = @CompanyID and Year = @Year);
-set @SequenceNumeber = (SELECT Number FROM crg.SequencePerJournal where JournalId = @JournalID);
+set @SequenceNumeber = (SELECT Number FROM crg.SequencePerJournal where JournalId = @JournalID and name='JOURNAL_PAGE');
 
 INSERT INTO [fin].[JournalPage]
            ([JournalPageId]

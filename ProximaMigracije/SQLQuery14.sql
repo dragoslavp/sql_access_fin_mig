@@ -1,6 +1,3 @@
-USE [FineraTESTInterfin]
-GO
-
 DECLARE @CompanyCode nvarchar(255);
 DECLARE @CompanyID uniqueidentifier;
 DECLARE @SequenceNumeber INT;
@@ -21,30 +18,6 @@ set @BranchId = (select BranchId from crg.Branch where CompanyId=@CompanyID and 
 set @CurrencyId = (select CurrencyId FROM grg.Currency where Symbol='BAM');
 
 
-INSERT INTO [fin].[JournalPageEntry]
-           ([JournalPageEntryId]
-           ,[JournalPageId]
-           ,[PartyId]
-           ,[CurrencyId]
-           ,[BranchId]
-           ,[AccountingPlanAccountId]
-           ,[DocumentDate]
-           ,[MaturityDate]
-           ,[Description]
-           ,[JournalLinkDescription]
-           ,[CurrencyRate]
-           ,[CurrencyRateDate]
-           ,[ForeignDebit]
-           ,[ForeignCredit]
-           ,[Debit]
-           ,[Credit]
-           ,[SortNumber]
-           ,[ExternalReference]
-           ,[LabelCodes]
-           ,[ChangedBy]
-           ,[ChangedTime]
-           ,[RowVersion]
-           ,[ChangeHistory])
 select
 newid() as JournalPageEntryId,
 jp.JournalPageId as JournalPageId,
@@ -87,13 +60,5 @@ GETDATE() as ChangedTime,
 null as ChangedHistory
 from
 mig.dnevnik d
---left outer join mig.nalozi n on d.BROJ=n.BROJ
-left outer join fin.JournalPage jp on d.BROJ = jp.ExternalReference
-where
-1=1
-and jp.JournalPageId is not null
-and d.godina=2022
-
-GO
-
-
+left outer join mig.nalozi n on d.BROJ=n.BROJ
+left outer join fin.JournalPage jp on n.BROJ = jp.ExternalReference
