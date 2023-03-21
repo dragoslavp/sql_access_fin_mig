@@ -9,6 +9,11 @@ from
 mig.ZaglavljeFakt
 
 
+select
+*
+from
+mig.fakture
+
 SELECT
 *
 FROM

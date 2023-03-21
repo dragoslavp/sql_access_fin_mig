@@ -82,7 +82,7 @@ INSERT INTO [inv].[InvoicePage]
 SELECT
 newid() as InvoicePageId,
 @JOURNAL_ID as JournalId,
-ROW_NUMBER() over (ORDER BY redbr)           as JournalSequenceNumber,
+ROW_NUMBER() over (ORDER BY redbr) as JournalSequenceNumber,
 1 as Revision,
 1 as DocumentStatusId,
 @LedgerDocumentCategoryTypeId as LedgerDocumentCategoryTypeId,
@@ -126,6 +126,18 @@ where
 1=1
 and zf.InvoiceNumber<>0
 and godina = @YEAR
+
+
+UPDATE crg.SequencePerJournal
+SET Number = (select 
+				max(ip.JournalSequenceNumber)
+				from inv.InvoicePage ip
+				where JournalId = @Journal_ID
+				--and jp.Date >= CAST('01/01/2022' as date) and jp.Date <= CAST('12/31/2022'  as date)				
+				)
+WHERE JournalId = @Journal_ID and Name = 'INVOICE_PAGE'
+
+
 
 GO
 

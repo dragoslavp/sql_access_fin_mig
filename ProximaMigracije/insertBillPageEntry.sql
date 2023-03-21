@@ -23,46 +23,50 @@ SET @CurrencyId = (select CurrencyId FROM grg.Currency where Symbol='BAM');
 SET @MeasureUnitId=(select MeasureUnitId from crg.MeasureUnit where CompanyId=@CompanyID and Name='kom');
 
 
-INSERT INTO [inv].[InvoicePageEntry]
-           ([InvoicePageEntryId]
-           ,[InvoicePageId]
-           ,[ProductInvoiceId]
-           ,[MeasureUnitId]
-           ,[Quantity]
-           ,[Price]
-           ,[DiscountRate]
-           ,[VatRate]
-           ,[NetAmount]
-           ,[VatAmount]
-           ,[GrossAmount]
-           ,[ChangedBy]
-           ,[ChangedTime]
-           ,[RowVersion]
-           ,[ChangeHistory])
+--INSERT INTO [inv].[BillPageEntry]
+--           ([BillPageEntryId]
+--           ,[BillPageId]
+--           ,[ProductBillId]
+--           ,[MeasureUnitId]
+--           ,[Quantity]
+--           ,[Price]
+--           ,[DiscountRate]
+--           ,[VatRate]
+--           ,[VatNonDeductible]
+--           ,[NetAmount]
+--           ,[VatAmount]
+--           ,[GrossAmount]
+--           ,[ChangedBy]
+--           ,[ChangedTime]
+--           ,[RowVersion]
+--           ,[ChangeHistory]
+--           ,[CustomVatAmount]
+--           ,[FixedAssetId])
 select
-newid() as InvoicePageEntryId,
-ip.InvoicePageId as InvoicePageId,
-(select ProductId from inv.Product where Code = f.SifraRobe) as ProductInvoiceId,
+newid() as BillPageEntryId,
+bp.BillPageId as BillPageId,
+1 as ProductBillId,
 @MeasureUnitId as MeasureUnitId,
 1 as Quantity,
-f.Iznos as Price,
+k.IznosBezPDV as Price,
 0 as DiscountRate,
 0 as VatRate,
-f.Iznos as NetAmount,
-0 as VatAmount,
-f.Iznos as GrossAmount,
+1 as VatNonDeductible,
+k.IznosBezPDV as NetAmount,
+k.PDV as VatAmount,
+k.Iznos as GrossAmount,
 'dragoslav.pajic' as ChangedBy,
 GETDATE() as ChangedTime,
 1 as RowVersion,
-null as ChangedHistory
+null as ChangedHistory,
+null as CustomVatAmount,
+null as FixedAssetId
 from
-mig.fakture f
---left outer join mig.ZaglavljeFakt zf on f.redbr = zf.redbr
-left outer join inv.InvoicePage ip on f.redbr = ip.ExternalReference
+mig.KUF k
+left outer join inv.BillPage bp on k.rb=bp.ExternalReference
 where
 1=1
-and f.godina = @Year
-and ip.BranchId = (select BranchId from crg.Branch where CompanyId=@CompanyID and IsHeadquarter=cast(1 as bit))
+and k.Datum >= convert(datetime, '01-01-2022') and k.Datum <= convert(datetime, '12-31-2022')
 
 GO
 
