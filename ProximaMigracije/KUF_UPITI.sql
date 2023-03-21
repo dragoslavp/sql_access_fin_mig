@@ -21,3 +21,8 @@ where
 1=1
 and k.Datum >= convert(datetime, '01-01-2022') and k.Datum <= convert(datetime, '12-31-2023')
 ;
+
+select
+*
+from
+inv.BillPageEntry;
