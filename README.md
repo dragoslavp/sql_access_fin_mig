@@ -1,4 +1,4 @@
-# Migracija podataka iz Access fajla u bazu Finera
+# Migracija podataka iz Access aplikacije za knjigovodstvo u bazu aplikacije Finera 
 
 ***Prije izvršavanja skripti potrebno je podatke iz Access fajla učitati u migracione tabele***
 
