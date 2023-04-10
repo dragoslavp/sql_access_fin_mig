@@ -23,29 +23,40 @@ SET @CurrencyId = (select CurrencyId FROM grg.Currency where Symbol='BAM');
 SET @MeasureUnitId=(select MeasureUnitId from crg.MeasureUnit where CompanyId=@CompanyID and Name='kom');
 
 
---INSERT INTO [inv].[BillPageEntry]
---           ([BillPageEntryId]
---           ,[BillPageId]
---           ,[ProductBillId]
---           ,[MeasureUnitId]
---           ,[Quantity]
---           ,[Price]
---           ,[DiscountRate]
---           ,[VatRate]
---           ,[VatNonDeductible]
---           ,[NetAmount]
---           ,[VatAmount]
---           ,[GrossAmount]
---           ,[ChangedBy]
---           ,[ChangedTime]
---           ,[RowVersion]
---           ,[ChangeHistory]
---           ,[CustomVatAmount]
---           ,[FixedAssetId])
+INSERT INTO [inv].[BillPageEntry]
+           ([BillPageEntryId]
+           ,[BillPageId]
+           ,[ProductBillId]
+           ,[MeasureUnitId]
+           ,[Quantity]
+           ,[Price]
+           ,[DiscountRate]
+           ,[VatRate]
+           ,[VatNonDeductible]
+           ,[NetAmount]
+           ,[VatAmount]
+           ,[GrossAmount]
+           ,[ChangedBy]
+           ,[ChangedTime]
+           ,[RowVersion]
+           ,[ChangeHistory]
+           ,[CustomVatAmount]
+           ,[FixedAssetId])
 select
 newid() as BillPageEntryId,
 bp.BillPageId as BillPageId,
-1 as ProductBillId,
+  (select
+  top 1 pb.ProductBillId
+  from
+  inv.Product p 
+  left join inv.ProductBill pb on p.ProductId=pb.ProductBillId
+  left join mig.kuf k1 on p.Name=UPPER(k.Opis)
+  where
+  pb.productbillid is not null
+  and k1.Datum >= convert(datetime, '01-01-2022') and k1.Datum <= convert(datetime, '12-31-2022')
+  and p.CompanyId = @CompanyID
+  and p.Name=upper(k.Opis) 
+  ) as ProductBillId,
 @MeasureUnitId as MeasureUnitId,
 1 as Quantity,
 k.IznosBezPDV as Price,
@@ -53,7 +64,7 @@ k.IznosBezPDV as Price,
 0 as VatRate,
 1 as VatNonDeductible,
 k.IznosBezPDV as NetAmount,
-k.PDV as VatAmount,
+isnull(k.PDV,0) as VatAmount,
 k.Iznos as GrossAmount,
 'dragoslav.pajic' as ChangedBy,
 GETDATE() as ChangedTime,

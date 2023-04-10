@@ -1,4 +1,4 @@
-USE [FineraTESTInterfin]
+﻿USE [FineraTESTInterfin]
 GO
 
 DECLARE @CompanyCode nvarchar(255);
@@ -13,38 +13,38 @@ declare @CurrencyId uniqueidentifier;
 
 SET @CompanyCode = 'PROCON';
 SET @CompanyID = (SELECT CompanyId from grg.Company where Code=@CompanyCode);
-set @Year = 2022;
-set @LedgerDocumentCategoryTypeId = (SELECT LedgerDocumentCategoryTypeId FROM CRG.LedgerDocumentCategoryType WHERE CompanyId=@CompanyID AND NAME='Redovno knji�enje');
+set @Year = 2023;
+set @LedgerDocumentCategoryTypeId = (SELECT LedgerDocumentCategoryTypeId FROM CRG.LedgerDocumentCategoryType WHERE CompanyId=@CompanyID AND NAME='Početno stanje');
 SET @JournalID = (SELECT JournalId FROM crg.Journal where CompanyId = @CompanyID and Year = @Year);
 set @SequenceNumeber = (SELECT Number FROM crg.SequencePerJournal where JournalId = @JournalID);
 set @BranchId = (select BranchId from crg.Branch where CompanyId=@CompanyID and IsHeadquarter=cast(1 as bit));
 set @CurrencyId = (select CurrencyId FROM grg.Currency where Symbol='BAM');
 
 
-INSERT INTO [fin].[JournalPageEntry]
-           ([JournalPageEntryId]
-           ,[JournalPageId]
-           ,[PartyId]
-           ,[CurrencyId]
-           ,[BranchId]
-           ,[AccountingPlanAccountId]
-           ,[DocumentDate]
-           ,[MaturityDate]
-           ,[Description]
-           ,[JournalLinkDescription]
-           ,[CurrencyRate]
-           ,[CurrencyRateDate]
-           ,[ForeignDebit]
-           ,[ForeignCredit]
-           ,[Debit]
-           ,[Credit]
-           ,[SortNumber]
-           ,[ExternalReference]
-           ,[LabelCodes]
-           ,[ChangedBy]
-           ,[ChangedTime]
-           ,[RowVersion]
-           ,[ChangeHistory])
+--INSERT INTO [fin].[JournalPageEntry]
+--           ([JournalPageEntryId]
+--           ,[JournalPageId]
+--           ,[PartyId]
+--           ,[CurrencyId]
+--           ,[BranchId]
+--           ,[AccountingPlanAccountId]
+--           ,[DocumentDate]
+--           ,[MaturityDate]
+--           ,[Description]
+--           ,[JournalLinkDescription]
+--           ,[CurrencyRate]
+--           ,[CurrencyRateDate]
+--           ,[ForeignDebit]
+--           ,[ForeignCredit]
+--           ,[Debit]
+--           ,[Credit]
+--           ,[SortNumber]
+--           ,[ExternalReference]
+--           ,[LabelCodes]
+--           ,[ChangedBy]
+--           ,[ChangedTime]
+--           ,[RowVersion]
+--           ,[ChangeHistory])
 select
 newid() as JournalPageEntryId,
 jp.JournalPageId as JournalPageId,
@@ -92,7 +92,8 @@ left outer join fin.JournalPage jp on d.BROJ = jp.ExternalReference
 where
 1=1
 and jp.JournalPageId is not null
-and d.godina=2022
+and d.godina=2023
+and d.BROJ=1
 
 GO
 

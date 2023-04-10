@@ -42,7 +42,7 @@ INSERT INTO [inv].[InvoicePageEntry]
 select
 newid() as InvoicePageEntryId,
 ip.InvoicePageId as InvoicePageId,
-(select ProductId from inv.Product where Code = f.SifraRobe) as ProductInvoiceId,
+(select ProductId from inv.Product where Code = f.SifraRobe and CompanyId=@CompanyID) as ProductInvoiceId,
 @MeasureUnitId as MeasureUnitId,
 1 as Quantity,
 f.Iznos as Price,

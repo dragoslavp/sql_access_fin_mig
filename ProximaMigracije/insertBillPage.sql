@@ -41,46 +41,46 @@ IF NOT EXISTS (SELECT 1 FROM crg.SequencePerJournal where JournalId=@JOURNAL_ID 
 
 SET @SNUMBER = (SELECT Number FROM crg.SequencePerJournal where JournalId = @JOURNAL_ID and name=@SNAME);
 
---INSERT INTO [inv].[BillPage]
---           ([BillPageId]
---           ,[JournalId]
---           ,[JournalSequenceNumber]
---           ,[Revision]
---           ,[DocumentStatusId]
---           ,[LedgerDocumentCategoryTypeId]
---           ,[Date]
---           ,[Description]
---           ,[RevisionDate]
---           ,[RevisionDescription]
---           ,[ActivationDate]
---           ,[JournalPageId]
---           ,[MaturityDate]
---           ,[Number]
---           ,[CancellationNumber]
---           ,[FiscalNumber]
---           ,[BranchId]
---           ,[PaymentMethodId]
---           ,[PartyId]
---           ,[AdvancePaymentPageId]
---           ,[NetAmount]
---           ,[VatAmount]
---           ,[GrossAmount]
---           ,[CurrencyId]
---           ,[CurrencyDate]
---           ,[CurrencyRate]
---           ,[ReceptionDate]
---           ,[DateFrom]
---           ,[DateTo]
---           ,[Note]
---           ,[HasImportDeclaration]
---           ,[IsExported]
---           ,[AutoCreated]
---           ,[ExternalReference]
---           ,[ChangedBy]
---           ,[ChangedTime]
---           ,[RowVersion]
---           ,[ChangeHistory]
---           ,[CustomsDeclarationNumber])
+INSERT INTO [inv].[BillPage]
+           ([BillPageId]
+           ,[JournalId]
+           ,[JournalSequenceNumber]
+           ,[Revision]
+           ,[DocumentStatusId]
+           ,[LedgerDocumentCategoryTypeId]
+           ,[Date]
+           ,[Description]
+           ,[RevisionDate]
+           ,[RevisionDescription]
+           ,[ActivationDate]
+           ,[JournalPageId]
+           ,[MaturityDate]
+           ,[Number]
+           ,[CancellationNumber]
+           ,[FiscalNumber]
+           ,[BranchId]
+           ,[PaymentMethodId]
+           ,[PartyId]
+           ,[AdvancePaymentPageId]
+           ,[NetAmount]
+           ,[VatAmount]
+           ,[GrossAmount]
+           ,[CurrencyId]
+           ,[CurrencyDate]
+           ,[CurrencyRate]
+           ,[ReceptionDate]
+           ,[DateFrom]
+           ,[DateTo]
+           ,[Note]
+           ,[HasImportDeclaration]
+           ,[IsExported]
+           ,[AutoCreated]
+           ,[ExternalReference]
+           ,[ChangedBy]
+           ,[ChangedTime]
+           ,[RowVersion]
+           ,[ChangeHistory]
+           ,[CustomsDeclarationNumber])
 select
 newid() as BillPageId,
 @JOURNAL_ID as JournalId,
@@ -129,14 +129,14 @@ and k.Datum >= convert(datetime, '01-01-2022') and k.Datum <= convert(datetime, 
 ;
 
 
---UPDATE crg.SequencePerJournal
---SET Number = (select 
---				max(bp.JournalSequenceNumber)
---				from inv.BillPage bp
---				where JournalId = @Journal_ID
---				--and jp.Date >= CAST('01/01/2022' as date) and jp.Date <= CAST('12/31/2022'  as date)				
---				)
---WHERE JournalId = @Journal_ID and Name = @SNAME;
+UPDATE crg.SequencePerJournal
+SET Number = (select 
+				max(bp.JournalSequenceNumber)
+				from inv.BillPage bp
+				where JournalId = @Journal_ID
+				--and jp.Date >= CAST('01/01/2022' as date) and jp.Date <= CAST('12/31/2022'  as date)				
+				)
+WHERE JournalId = @Journal_ID and Name = @SNAME;
 
 
 GO

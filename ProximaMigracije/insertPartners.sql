@@ -7,27 +7,44 @@ GO
 DECLARE @CompanyCode nvarchar(255);
 DECLARE @CompanyID uniqueidentifier;
 DECLARE @SequenceNumeber INT;
+DECLARE @SNAME nvarchar(255);
 
 SET @CompanyCode = 'PROCON';
 SET @CompanyID = (SELECT CompanyId from grg.Company where Code=@CompanyCode);
-set @SequenceNumeber = (select number from crg.SequencePerCompany where name = 'Party' and CompanyId=@CompanyID);
+set @SequenceNumeber = (select number from crg.SequencePerCompany where name = 'PARTY' and CompanyId=@CompanyID);
+set @SNAME = 'PARTY'
 
-INSERT INTO [crg].[Party]
-           ([PartyId]
-           ,[CompanyId]
-           ,[CompanySequenceNumber]
-           ,[Name]
-           ,[Code]
-           ,[UID]
-           ,[ExternalClientId]
-           ,[PersonTypeId]
-           ,[IsEmployee]
-           ,[IsBank]
-           ,[ChangedBy]
-           ,[ChangedTime]
-           ,[RowVersion]
-           ,[ChangeHistory]
-           ,[Deleted])
+
+--IF NOT EXISTS (SELECT 1 FROM crg.SequencePerCompany where CompanyId=@CompanyID and name = @SNAME)
+--	INSERT INTO [crg].[SequencePerCompany]
+--			   ([SequencePerCompanyId]
+--			   ,[CompanyId]
+--			   ,[Name]
+--			   ,[Number])
+--		 VALUES
+--				(
+--				NEWID(),
+--				@CompanyID,
+--				@SNAME,
+--				0
+--				)
+
+--INSERT INTO [crg].[Party]
+--           ([PartyId]
+--           ,[CompanyId]
+--           ,[CompanySequenceNumber]
+--           ,[Name]
+--           ,[Code]
+--           ,[UID]
+--           ,[ExternalClientId]
+--           ,[PersonTypeId]
+--           ,[IsEmployee]
+--           ,[IsBank]
+--           ,[ChangedBy]
+--           ,[ChangedTime]
+--           ,[RowVersion]
+--           ,[ChangeHistory]
+--           ,[Deleted])
 SELECT
 newid() as PartyId,
 @CompanyID as CompanyId,
@@ -52,10 +69,10 @@ mig.PartneriAccess pa
 
 
 
-UPDATE crg.SequencePerCompany
-SET Number = (select 
-				max(p.CompanySequenceNumber)
-				from crg.Party p
-				where CompanyId = @CompanyID)
-WHERE CompanyId=@CompanyID and Name = 'PARTY'
+--UPDATE crg.SequencePerCompany
+--SET Number = (select 
+--				max(p.CompanySequenceNumber)
+--				from crg.Party p
+--				where CompanyId = @CompanyID)
+--WHERE CompanyId=@CompanyID and Name = 'PARTY'
 
